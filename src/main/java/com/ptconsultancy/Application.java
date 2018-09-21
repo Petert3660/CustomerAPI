@@ -1,7 +1,10 @@
 package com.ptconsultancy;
 
 import com.ptconsultancy.admin.adminsupport.BuildVersion;
+import com.ptconsultancy.domain.datamodels.Address;
+import com.ptconsultancy.entities.Customer;
 import com.ptconsultancy.messages.MessageHandler;
+import com.ptconsultancy.reopositories.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.core.env.Environment;
+import org.thymeleaf.util.StringUtils;
 
 /**
  * Created by Peter Thomson on 13/04/2018.
@@ -26,6 +30,9 @@ public class Application implements CommandLineRunner {
     private static final int EXIT_STATUS = 0;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
     private Environment env;
 
     @Autowired
@@ -41,6 +48,7 @@ public class Application implements CommandLineRunner {
     public void run(String... strings) throws Exception {
         System.out.println(messageHandler.getMessage("messages.ptconsultancy.messages"));
         outputMessage();
+        populateDatabase();
     }
 
     private void outputMessage() {
@@ -57,5 +65,21 @@ public class Application implements CommandLineRunner {
             System.out.println("* This application is now running on:- " + hostname + serverPort);
         }
         System.out.println("************************************************************************");
+    }
+
+    private void populateDatabase() {
+
+        if (customerRepository.findCustomerById((long) 11111).size() == 0) {
+            String prop;
+            int i = 1;
+            do {
+                String address = "customer" + String.valueOf(i++);
+                prop = env.getProperty(address);
+                if (!StringUtils.isEmpty(prop)) {
+                    String[] custDetails = prop.split(", ");
+                    customerRepository.save(new Customer(Long.parseLong(custDetails[0]), custDetails[1], custDetails[2], new Address()));
+                }
+            } while (!StringUtils.isEmpty(prop));
+        }
     }
 }
