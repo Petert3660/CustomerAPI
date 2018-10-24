@@ -1,6 +1,5 @@
 package com.ptconsultancy.entities;
 
-import com.ptconsultancy.domain.datamodels.Address;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,13 +16,13 @@ public class Customer {
     private String forename;
     private String surname;
     @OneToOne
-    private Address primaryAddress;
+    private AddressEntity primaryAddress;
 
     public Customer() {
         super();
     }
 
-    public Customer(Long custId, String forename, String surname, Address primaryAddress) {
+    public Customer(Long custId, String forename, String surname, AddressEntity primaryAddress) {
         this.custId = custId;
         this.forename = forename;
         this.surname = surname;
@@ -62,11 +61,11 @@ public class Customer {
         this.surname = surname;
     }
 
-    public Address getPrimaryAddress() {
+    public AddressEntity getPrimaryAddress() {
         return primaryAddress;
     }
 
-    public void setPrimaryAddress(Address primaryAddress) {
+    public void setPrimaryAddress(AddressEntity primaryAddress) {
         this.primaryAddress = primaryAddress;
     }
 }

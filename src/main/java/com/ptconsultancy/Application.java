@@ -1,9 +1,10 @@
 package com.ptconsultancy;
 
 import com.ptconsultancy.admin.adminsupport.BuildVersion;
-import com.ptconsultancy.domain.datamodels.Address;
+import com.ptconsultancy.entities.AddressEntity;
 import com.ptconsultancy.entities.Customer;
 import com.ptconsultancy.messages.MessageHandler;
+import com.ptconsultancy.reopositories.AddressEntityRepository;
 import com.ptconsultancy.reopositories.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class Application implements CommandLineRunner {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private AddressEntityRepository addressEntityRepository;
 
     @Autowired
     private Environment env;
@@ -77,7 +81,9 @@ public class Application implements CommandLineRunner {
                 prop = env.getProperty(address);
                 if (!StringUtils.isEmpty(prop)) {
                     String[] custDetails = prop.split(", ");
-                    customerRepository.save(new Customer(Long.parseLong(custDetails[0]), custDetails[1], custDetails[2], new Address()));
+                    AddressEntity addressEntity = new AddressEntity();
+                    addressEntityRepository.save(addressEntity);
+                    customerRepository.save(new Customer(Long.parseLong(custDetails[0]), custDetails[1], custDetails[2], addressEntity));
                 }
             } while (!StringUtils.isEmpty(prop));
         }

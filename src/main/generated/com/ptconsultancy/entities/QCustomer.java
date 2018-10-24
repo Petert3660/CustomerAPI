@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,6 +18,8 @@ public class QCustomer extends EntityPathBase<Customer> {
 
     private static final long serialVersionUID = 384942779L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QCustomer customer = new QCustomer("customer");
 
     public final NumberPath<Long> custId = createNumber("custId", Long.class);
@@ -25,20 +28,29 @@ public class QCustomer extends EntityPathBase<Customer> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final SimplePath<com.ptconsultancy.domain.datamodels.Address> primaryAddress = createSimple("primaryAddress", com.ptconsultancy.domain.datamodels.Address.class);
+    public final QAddressEntity primaryAddress;
 
     public final StringPath surname = createString("surname");
 
     public QCustomer(String variable) {
-        super(Customer.class, forVariable(variable));
+        this(Customer.class, forVariable(variable), INITS);
     }
 
     public QCustomer(Path<? extends Customer> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), path.getMetadata().isRoot() ? INITS : PathInits.DEFAULT);
     }
 
     public QCustomer(PathMetadata metadata) {
-        super(Customer.class, metadata);
+        this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
+    }
+
+    public QCustomer(PathMetadata metadata, PathInits inits) {
+        this(Customer.class, metadata, inits);
+    }
+
+    public QCustomer(Class<? extends Customer> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.primaryAddress = inits.isInitialized("primaryAddress") ? new QAddressEntity(forProperty("primaryAddress")) : null;
     }
 
 }
